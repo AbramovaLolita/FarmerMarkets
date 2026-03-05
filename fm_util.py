@@ -107,11 +107,12 @@ def market_info():
     @raises: psycopg2.Error.
     @returns: None
     '''
-    view.print_market_name()
-    command = input().lower()
+    command = ''
     while command != 'exit':
         try:
-            info = fm_model.market_info_db(command)
+            view.print_market_name()
+            market_name = input().lower()
+            info = fm_model.market_info_db(market_name)
             if info:
                 view.print_market_info(info)
             else:
@@ -120,6 +121,7 @@ def market_info():
         except Exception as e:
             view.print_not_found()
             break
+        view.print_continue()
         command = input().lower()
 
 def market_find():
