@@ -1,0 +1,5 @@
+список рынков FMID,MarketName,Street,x,y,updateTime
+средства оплаты (Credit,WIC,WICcash,SFMNP,SNAP)
+города-штаты (city,County,State,zip)
+медиа (Website,Facebook,Twitter,Youtube,OtherMedia)
+товары (Organic,Bakedgoods,Cheese,Crafts,Flowers,Eggs,Seafood,Herbs,Vegetables,Honey,Jams,Maple,Meat,Nursery,Nuts,Plants,Poultry,Prepared,Soap,Trees,Wine,Coffee,Beans,Fruits,Grains,Juices,Mushrooms,PetFood,Tofu,WildHarvested,)
