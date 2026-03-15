@@ -3,23 +3,32 @@ import math
 import fm_view_console as view
 
 
-SORT_MAPPING = {
-    "1": "name",
-    "2": "city",
-    "3": "state",
-    "4": "rating"
-}
-ORDER = 'ASC'
-SORT = '1'
 def sort_list():
+    sort_mapping = {
+        "1": "name",
+        "2": "city",
+        "3": "state",
+        "4": "rating",
+        "5": "distance"
+
+    }
     view.print_order_by()
     choice = input()
-    SORT = SORT_MAPPING.get(choice, SORT_MAPPING['1'])
+    sort = sort_mapping.get(choice, sort_mapping['1'])
     view.print_asc_desc()
     direction_choice = input()
     direction = int(direction_choice) if direction_choice.isdigit() else 1
-    ORDER = "ASC" if direction == 1 else "DESC"
+    order = "ASC" if direction == 1 else "DESC"
+    return sort, order
 
+def market_nearby():
+    view.print_ask_location()
+    # координаты пользователя
+    coordinates = input().split()
+    view.print_ask_distance()
+    # максимальная удаленность рынка в км
+    coordinates.append(input())
+    return coordinates
 
 def market_register():
     '''@requires: username, password, email
@@ -48,7 +57,6 @@ def market_register():
             else:
                 view.print_failed()
 
-
 def market_login():
     '''@requires: username, password
 @modifies: Ничего не меняет.
@@ -71,24 +79,20 @@ def market_login():
             command = input().lower()
 
 def markets_list():
-    '''@requires: Доступ к таблице markets и reviews. Ввод команд 'next', 'prev', 'exit' и выбор сортировки.
-    @modifies: None
-    @effects: Читает данные из БД и постранично выводит список рынков в консоль.
-    @raises: KeyError (если введен номер сортировки, которого нет в SORT_MAPPING), ValueError (при вводе не-цифр в выбор направления).
-    @returns: None.'''
     page_size = 10
     current_page = 0
     total_rows = fm_model.get_total_count_db()
-    # вычисляем количество страниц (общее количество строк в БД делим на размер страницы)
-    total_pages = math.ceil(fm_model.get_total_count_db() / page_size)
+    total_pages = math.ceil(total_rows / page_size)
+    sort, order = sort_list()
+
     command = ''
-    sort_list()
     while command != 'exit':
         offset = current_page * page_size
-        rows = fm_model.markets_list_db(page_size, offset,sort_by=SORT,order=ORDER)
+        rows = fm_model.markets_list_db(page_size, offset, sort_by=sort, order=order)
         for row in rows:
             view.print_market_list(row)
-        view.print_cur_page(current_page + 1,total_rows)
+
+        view.print_cur_page(current_page + 1, total_pages)
         view.print_page()
         command = input().lower()
         if command == 'next' and current_page < total_pages - 1:
@@ -97,14 +101,14 @@ def markets_list():
             current_page -= 1
         elif command == 'exit':
             break
-        else:
+        elif command not in ['next', 'prev']:
             view.print_invalid_command()
 
 def market_info():
     '''@requires: market_name
     @modifies: None
     @effects: карточка выбранного рынка или сообщение, что рынок не найден
-    @raises: psycopg2.Error.
+    @raises: Exception - psycopg2.Error.
     @returns: None
     '''
     command = ''
@@ -112,33 +116,44 @@ def market_info():
         try:
             view.print_market_name()
             market_name = input().lower()
-            info = fm_model.market_info_db(market_name)
-            if info:
-                view.print_market_info(info)
+            if market_name:
+                info = fm_model.market_info_db(market_name)
+                if info:
+                    view.print_market_info(info)
             else:
                 view.print_market_incorrect()
-                view.print_market_name()
+            view.print_continue()
+            command = input().lower()
         except Exception as e:
             view.print_not_found()
-            break
-        view.print_continue()
-        command = input().lower()
 
-def market_find():
-    '''@requires: city И/ИЛИ state И/ИЛИ zip_code, параметры сортировки (SORT_MAPPING, ASC/DESC)
+def market_search():
+    '''@requires: параметры сортировки (sort_mapping, asc/desc). Если сортировка distance, то lat,long,max_dist,
+    иначе city И/ИЛИ state И/ИЛИ zip_code
     @modifies: None
     @effects: вывод списка найденных рынков, соответствующих фильтрам.
     @raises: None
     @returns: None
     '''
-    sort_list()
-    view.print_market_loc()
+    sort, order = sort_list()
+    user_lat = user_long = max_dist = city = state = zip_code = None
     command = ''
     while command != 'exit':
-        city = input("City: ").strip() or None
-        state = input("State: ").strip() or None
-        zip_code = input("Zip_code: ").strip() or None
-        results = fm_model.market_find_db(city=city, state=state, zip_code=zip_code,sort_by=SORT,order=ORDER)
+        if sort == 'distance':
+            nearby = market_nearby()
+            if len(nearby) == 3:
+                try:
+                    user_lat = float(nearby[0])
+                    user_long = float(nearby[1])
+                    max_dist = float(nearby[2])
+                except ValueError:
+                    view.print_invalid_command()
+        else:
+            view.print_market_loc()
+            city = input("City: ").strip()
+            state = input("State: ").strip()
+            zip_code = input("Zip_code: ").strip()
+        results = fm_model.market_search_db(city=city, state=state, zip_code=zip_code,sort_by=sort,order=order,user_lat=user_lat,user_long=user_long,max_dist=max_dist)
         if not results:
             view.print_not_found()
         else:
@@ -198,4 +213,5 @@ def market_delete(user_id):
             view.print_failed()
     else:
         view.print_no_perm()
+
 

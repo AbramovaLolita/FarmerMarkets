@@ -10,7 +10,7 @@ SET lock_timeout = 0;
 SET idle_in_transaction_session_timeout = 0;
 SET client_encoding = 'UTF8';
 SET standard_conforming_strings = on;
-SELECT pg_catalog.set_config('search_path', '', false);
+--SELECT pg_catalog.set_config('search_path', '', false);
 SET check_function_bodies = false;
 SET xmloption = content;
 SET client_min_messages = warning;
@@ -20,9 +20,7 @@ SET default_tablespace = '';
 
 SET default_table_access_method = heap;
 
---
--- Name: locations; Type: TABLE; Schema: public; Owner: postgres
---
+
 
 CREATE TABLE public.locations (
     zip character varying(10) NOT NULL,
@@ -32,11 +30,6 @@ CREATE TABLE public.locations (
 );
 
 
-ALTER TABLE public.locations OWNER TO postgres;
-
---
--- Name: market_media; Type: TABLE; Schema: public; Owner: postgres
---
 
 CREATE TABLE public.market_media (
     fmid integer NOT NULL,
@@ -48,11 +41,6 @@ CREATE TABLE public.market_media (
 );
 
 
-ALTER TABLE public.market_media OWNER TO postgres;
-
---
--- Name: market_payments; Type: TABLE; Schema: public; Owner: postgres
---
 
 CREATE TABLE public.market_payments (
     fmid integer NOT NULL,
@@ -60,11 +48,7 @@ CREATE TABLE public.market_payments (
 );
 
 
-ALTER TABLE public.market_payments OWNER TO postgres;
 
---
--- Name: market_products; Type: TABLE; Schema: public; Owner: postgres
---
 
 CREATE TABLE public.market_products (
     fmid integer NOT NULL,
@@ -72,11 +56,6 @@ CREATE TABLE public.market_products (
 );
 
 
-ALTER TABLE public.market_products OWNER TO postgres;
-
---
--- Name: market_schedules; Type: TABLE; Schema: public; Owner: postgres
---
 
 CREATE TABLE public.market_schedules (
     schedule_id integer NOT NULL,
@@ -87,11 +66,7 @@ CREATE TABLE public.market_schedules (
 );
 
 
-ALTER TABLE public.market_schedules OWNER TO postgres;
 
---
--- Name: market_schedules_schedule_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
---
 
 CREATE SEQUENCE public.market_schedules_schedule_id_seq
     AS integer
@@ -102,18 +77,12 @@ CREATE SEQUENCE public.market_schedules_schedule_id_seq
     CACHE 1;
 
 
-ALTER TABLE public.market_schedules_schedule_id_seq OWNER TO postgres;
 
---
--- Name: market_schedules_schedule_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
---
 
 ALTER SEQUENCE public.market_schedules_schedule_id_seq OWNED BY public.market_schedules.schedule_id;
 
 
---
--- Name: markets; Type: TABLE; Schema: public; Owner: postgres
---
+
 
 CREATE TABLE public.markets (
     fmid integer NOT NULL,
@@ -126,11 +95,6 @@ CREATE TABLE public.markets (
 );
 
 
-ALTER TABLE public.markets OWNER TO postgres;
-
---
--- Name: payment_methods; Type: TABLE; Schema: public; Owner: postgres
---
 
 CREATE TABLE public.payment_methods (
     payment_method_id integer NOT NULL,
@@ -138,11 +102,7 @@ CREATE TABLE public.payment_methods (
 );
 
 
-ALTER TABLE public.payment_methods OWNER TO postgres;
 
---
--- Name: payment_methods_payment_method_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
---
 
 CREATE SEQUENCE public.payment_methods_payment_method_id_seq
     AS integer
@@ -153,30 +113,16 @@ CREATE SEQUENCE public.payment_methods_payment_method_id_seq
     CACHE 1;
 
 
-ALTER TABLE public.payment_methods_payment_method_id_seq OWNER TO postgres;
-
---
--- Name: payment_methods_payment_method_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
---
 
 ALTER SEQUENCE public.payment_methods_payment_method_id_seq OWNED BY public.payment_methods.payment_method_id;
 
 
---
--- Name: products; Type: TABLE; Schema: public; Owner: postgres
---
 
 CREATE TABLE public.products (
     product_id integer NOT NULL,
     product_name text
 );
 
-
-ALTER TABLE public.products OWNER TO postgres;
-
---
--- Name: products_product_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
---
 
 CREATE SEQUENCE public.products_product_id_seq
     AS integer
@@ -187,18 +133,8 @@ CREATE SEQUENCE public.products_product_id_seq
     CACHE 1;
 
 
-ALTER TABLE public.products_product_id_seq OWNER TO postgres;
-
---
--- Name: products_product_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
---
-
 ALTER SEQUENCE public.products_product_id_seq OWNED BY public.products.product_id;
 
-
---
--- Name: reviews; Type: TABLE; Schema: public; Owner: postgres
---
 
 CREATE TABLE public.reviews (
     review_id integer NOT NULL,
@@ -211,11 +147,7 @@ CREATE TABLE public.reviews (
 );
 
 
-ALTER TABLE public.reviews OWNER TO postgres;
 
---
--- Name: reviews_review_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
---
 
 CREATE SEQUENCE public.reviews_review_id_seq
     AS integer
@@ -226,18 +158,12 @@ CREATE SEQUENCE public.reviews_review_id_seq
     CACHE 1;
 
 
-ALTER TABLE public.reviews_review_id_seq OWNER TO postgres;
 
---
--- Name: reviews_review_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
---
 
 ALTER SEQUENCE public.reviews_review_id_seq OWNED BY public.reviews.review_id;
 
 
---
--- Name: users; Type: TABLE; Schema: public; Owner: admin
---
+
 
 CREATE TABLE public.users (
     id integer NOT NULL,
@@ -249,11 +175,6 @@ CREATE TABLE public.users (
 );
 
 
-ALTER TABLE public.users OWNER TO admin;
-
---
--- Name: users_id_seq; Type: SEQUENCE; Schema: public; Owner: admin
---
 
 CREATE SEQUENCE public.users_id_seq
     AS integer
@@ -264,53 +185,34 @@ CREATE SEQUENCE public.users_id_seq
     CACHE 1;
 
 
-ALTER TABLE public.users_id_seq OWNER TO admin;
 
---
--- Name: users_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: admin
---
 
 ALTER SEQUENCE public.users_id_seq OWNED BY public.users.id;
 
 
---
--- Name: market_schedules schedule_id; Type: DEFAULT; Schema: public; Owner: postgres
---
+
 
 ALTER TABLE ONLY public.market_schedules ALTER COLUMN schedule_id SET DEFAULT nextval('public.market_schedules_schedule_id_seq'::regclass);
 
 
---
--- Name: payment_methods payment_method_id; Type: DEFAULT; Schema: public; Owner: postgres
---
 
 ALTER TABLE ONLY public.payment_methods ALTER COLUMN payment_method_id SET DEFAULT nextval('public.payment_methods_payment_method_id_seq'::regclass);
 
 
---
--- Name: products product_id; Type: DEFAULT; Schema: public; Owner: postgres
---
 
 ALTER TABLE ONLY public.products ALTER COLUMN product_id SET DEFAULT nextval('public.products_product_id_seq'::regclass);
 
 
---
--- Name: reviews review_id; Type: DEFAULT; Schema: public; Owner: postgres
---
 
 ALTER TABLE ONLY public.reviews ALTER COLUMN review_id SET DEFAULT nextval('public.reviews_review_id_seq'::regclass);
 
 
---
--- Name: users id; Type: DEFAULT; Schema: public; Owner: admin
---
+
 
 ALTER TABLE ONLY public.users ALTER COLUMN id SET DEFAULT nextval('public.users_id_seq'::regclass);
 
 
---
--- Data for Name: locations; Type: TABLE DATA; Schema: public; Owner: postgres
---
+
 
 COPY public.locations (zip, city, county, state) FROM stdin;
 05828	Danville	Caledonia	Vermont
@@ -1802,9 +1704,6 @@ COPY public.locations (zip, city, county, state) FROM stdin;
 \.
 
 
---
--- Data for Name: market_media; Type: TABLE DATA; Schema: public; Owner: postgres
---
 
 COPY public.market_media (fmid, website, facebook, twitter, youtube, other_media) FROM stdin;
 1018261	https://www.caledoniafarmersmarket.com	https://www.facebook.com/Danville.VT.Farmers.Market/	\N	\N	\N
@@ -3372,10 +3271,6 @@ COPY public.market_media (fmid, website, facebook, twitter, youtube, other_media
 1019792	\N	https://www.facebook.com/ZelieHarmonyFarmersMarket/	\N	\N	\N
 \.
 
-
---
--- Data for Name: market_payments; Type: TABLE DATA; Schema: public; Owner: postgres
---
 
 COPY public.market_payments (fmid, payment_method_id) FROM stdin;
 1018261	1
@@ -8167,7 +8062,7 @@ COPY public.market_payments (fmid, payment_method_id) FROM stdin;
 
 
 --
--- Data for Name: market_products; Type: TABLE DATA; Schema: public; Owner: postgres
+-- Data for Name: market_products; Type: TABLE DATA; Schema: public; 
 --
 
 COPY public.market_products (fmid, product_id) FROM stdin;
@@ -34358,9 +34253,6 @@ COPY public.market_products (fmid, product_id) FROM stdin;
 \.
 
 
---
--- Data for Name: market_schedules; Type: TABLE DATA; Schema: public; Owner: postgres
---
 
 COPY public.market_schedules (schedule_id, season_number, season_date, season_time, fmid) FROM stdin;
 1	1	06/10/2020 to 10/07/2020	Wed: 9:00 AM-1:00 PM;	1018261
@@ -36189,7 +36081,7 @@ COPY public.market_schedules (schedule_id, season_number, season_date, season_ti
 
 
 --
--- Data for Name: markets; Type: TABLE DATA; Schema: public; Owner: postgres
+-- Data for Name: markets; Type: TABLE DATA; Schema: public; 
 --
 
 COPY public.markets (fmid, name, street, lat, long, zip, updatetime) FROM stdin;
@@ -37873,9 +37765,6 @@ COPY public.markets (fmid, name, street, lat, long, zip, updatetime) FROM stdin;
 \.
 
 
---
--- Data for Name: payment_methods; Type: TABLE DATA; Schema: public; Owner: postgres
---
 
 COPY public.payment_methods (payment_method_id, payment_method) FROM stdin;
 1	Credit
@@ -37886,9 +37775,6 @@ COPY public.payment_methods (payment_method_id, payment_method) FROM stdin;
 \.
 
 
---
--- Data for Name: products; Type: TABLE DATA; Schema: public; Owner: postgres
---
 
 COPY public.products (product_id, product_name) FROM stdin;
 1	Organic
@@ -37924,9 +37810,6 @@ COPY public.products (product_id, product_name) FROM stdin;
 \.
 
 
---
--- Data for Name: reviews; Type: TABLE DATA; Schema: public; Owner: postgres
---
 
 COPY public.reviews (review_id, fmid, rating, comment, created_at, user_id) FROM stdin;
 1	1012634	4	good	2026-03-01 23:05:22.616544	1
@@ -37938,9 +37821,6 @@ COPY public.reviews (review_id, fmid, rating, comment, created_at, user_id) FROM
 \.
 
 
---
--- Data for Name: users; Type: TABLE DATA; Schema: public; Owner: admin
---
 
 COPY public.users (id, username, password, email, created_at, rol) FROM stdin;
 3	Alex	$2b$12$rIvyq5MLFK1tBqu9EmPNNe6YRvCoPyWO4cCDjZUKqjp8etj20c0Z2	\N	2026-03-04 21:32:30.358629	app_user
@@ -37950,375 +37830,93 @@ COPY public.users (id, username, password, email, created_at, rol) FROM stdin;
 \.
 
 
---
--- Name: market_schedules_schedule_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
---
 
 SELECT pg_catalog.setval('public.market_schedules_schedule_id_seq', 1, false);
 
-
---
--- Name: payment_methods_payment_method_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
---
-
 SELECT pg_catalog.setval('public.payment_methods_payment_method_id_seq', 1, false);
-
-
---
--- Name: products_product_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
---
 
 SELECT pg_catalog.setval('public.products_product_id_seq', 1, false);
 
-
---
--- Name: reviews_review_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
---
-
 SELECT pg_catalog.setval('public.reviews_review_id_seq', 8, true);
 
-
---
--- Name: users_id_seq; Type: SEQUENCE SET; Schema: public; Owner: admin
---
-
 SELECT pg_catalog.setval('public.users_id_seq', 7, true);
-
-
---
--- Name: locations locations_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
---
 
 ALTER TABLE ONLY public.locations
     ADD CONSTRAINT locations_pkey PRIMARY KEY (zip);
 
-
---
--- Name: market_media market_media_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
---
-
 ALTER TABLE ONLY public.market_media
     ADD CONSTRAINT market_media_pkey PRIMARY KEY (fmid);
-
-
---
--- Name: market_payments market_payments_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
---
 
 ALTER TABLE ONLY public.market_payments
     ADD CONSTRAINT market_payments_pkey PRIMARY KEY (fmid, payment_method_id);
 
-
---
--- Name: market_products market_products_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
---
-
 ALTER TABLE ONLY public.market_products
     ADD CONSTRAINT market_products_pkey PRIMARY KEY (fmid, product_id);
-
-
---
--- Name: market_schedules market_schedules_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
---
 
 ALTER TABLE ONLY public.market_schedules
     ADD CONSTRAINT market_schedules_pkey PRIMARY KEY (schedule_id);
 
-
---
--- Name: markets markets_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
---
-
 ALTER TABLE ONLY public.markets
     ADD CONSTRAINT markets_pkey PRIMARY KEY (fmid);
-
-
---
--- Name: payment_methods payment_methods_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
---
 
 ALTER TABLE ONLY public.payment_methods
     ADD CONSTRAINT payment_methods_pkey PRIMARY KEY (payment_method_id);
 
-
---
--- Name: products products_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
---
-
 ALTER TABLE ONLY public.products
     ADD CONSTRAINT products_pkey PRIMARY KEY (product_id);
-
-
---
--- Name: reviews reviews_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
---
 
 ALTER TABLE ONLY public.reviews
     ADD CONSTRAINT reviews_pkey PRIMARY KEY (review_id);
 
-
---
--- Name: users users_pkey; Type: CONSTRAINT; Schema: public; Owner: admin
---
-
 ALTER TABLE ONLY public.users
     ADD CONSTRAINT users_pkey PRIMARY KEY (id);
-
-
---
--- Name: users users_username_key; Type: CONSTRAINT; Schema: public; Owner: admin
---
 
 ALTER TABLE ONLY public.users
     ADD CONSTRAINT users_username_key UNIQUE (username);
 
-
---
--- Name: market_payments fk_market_payments_fmid; Type: FK CONSTRAINT; Schema: public; Owner: postgres
---
-
 ALTER TABLE ONLY public.market_payments
     ADD CONSTRAINT fk_market_payments_fmid FOREIGN KEY (fmid) REFERENCES public.markets(fmid) ON DELETE CASCADE;
-
-
---
--- Name: market_products fk_market_products_fmid; Type: FK CONSTRAINT; Schema: public; Owner: postgres
---
 
 ALTER TABLE ONLY public.market_products
     ADD CONSTRAINT fk_market_products_fmid FOREIGN KEY (fmid) REFERENCES public.markets(fmid) ON DELETE CASCADE;
 
-
---
--- Name: markets fk_markets_zip; Type: FK CONSTRAINT; Schema: public; Owner: postgres
---
-
 ALTER TABLE ONLY public.markets
     ADD CONSTRAINT fk_markets_zip FOREIGN KEY (zip) REFERENCES public.locations(zip);
-
-
---
--- Name: market_media fk_media_fmid; Type: FK CONSTRAINT; Schema: public; Owner: postgres
---
 
 ALTER TABLE ONLY public.market_media
     ADD CONSTRAINT fk_media_fmid FOREIGN KEY (fmid) REFERENCES public.markets(fmid) ON DELETE CASCADE;
 
-
---
--- Name: market_products fk_products_fmid; Type: FK CONSTRAINT; Schema: public; Owner: postgres
---
-
 ALTER TABLE ONLY public.market_products
     ADD CONSTRAINT fk_products_fmid FOREIGN KEY (fmid) REFERENCES public.markets(fmid) ON DELETE CASCADE;
-
-
---
--- Name: reviews fk_reviews_markets; Type: FK CONSTRAINT; Schema: public; Owner: postgres
---
 
 ALTER TABLE ONLY public.reviews
     ADD CONSTRAINT fk_reviews_markets FOREIGN KEY (fmid) REFERENCES public.markets(fmid) ON DELETE CASCADE;
 
-
---
--- Name: reviews fk_reviews_user; Type: FK CONSTRAINT; Schema: public; Owner: postgres
---
-
 ALTER TABLE ONLY public.reviews
     ADD CONSTRAINT fk_reviews_user FOREIGN KEY (user_id) REFERENCES public.users(id) ON DELETE CASCADE;
-
-
---
--- Name: market_schedules fk_schedules_fmid; Type: FK CONSTRAINT; Schema: public; Owner: postgres
---
 
 ALTER TABLE ONLY public.market_schedules
     ADD CONSTRAINT fk_schedules_fmid FOREIGN KEY (fmid) REFERENCES public.markets(fmid) ON DELETE CASCADE;
 
-
---
--- Name: market_payments market_payments_payment_method_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
---
-
 ALTER TABLE ONLY public.market_payments
     ADD CONSTRAINT market_payments_payment_method_id_fkey FOREIGN KEY (payment_method_id) REFERENCES public.payment_methods(payment_method_id) ON DELETE CASCADE;
-
-
---
--- Name: market_products market_products_product_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
---
 
 ALTER TABLE ONLY public.market_products
     ADD CONSTRAINT market_products_product_id_fkey FOREIGN KEY (product_id) REFERENCES public.products(product_id) ON DELETE CASCADE;
 
-
---
--- Name: markets markets_zip_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
---
-
 ALTER TABLE ONLY public.markets
     ADD CONSTRAINT markets_zip_fkey FOREIGN KEY (zip) REFERENCES public.locations(zip);
-
-
---
--- Name: market_media media_fmid_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
---
 
 ALTER TABLE ONLY public.market_media
     ADD CONSTRAINT media_fmid_fkey FOREIGN KEY (fmid) REFERENCES public.markets(fmid) ON DELETE CASCADE;
 
-
---
--- Name: reviews reviews_fmid_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
---
-
 ALTER TABLE ONLY public.reviews
     ADD CONSTRAINT reviews_fmid_fkey FOREIGN KEY (fmid) REFERENCES public.markets(fmid) ON DELETE CASCADE;
-
-
---
--- Name: market_schedules schedules_fmid_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
---
 
 ALTER TABLE ONLY public.market_schedules
     ADD CONSTRAINT schedules_fmid_fkey FOREIGN KEY (fmid) REFERENCES public.markets(fmid) ON DELETE CASCADE;
 
 
---
--- Name: SCHEMA public; Type: ACL; Schema: -; Owner: pg_database_owner
---
-
-GRANT USAGE ON SCHEMA public TO admin;
-GRANT USAGE ON SCHEMA public TO operator;
-
-
---
--- Name: TABLE locations; Type: ACL; Schema: public; Owner: postgres
---
-
-GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE public.locations TO admin;
-GRANT ALL ON TABLE public.locations TO operator;
-
-
---
--- Name: TABLE market_media; Type: ACL; Schema: public; Owner: postgres
---
-
-GRANT ALL ON TABLE public.market_media TO admin;
-GRANT ALL ON TABLE public.market_media TO operator;
-
-
---
--- Name: TABLE market_payments; Type: ACL; Schema: public; Owner: postgres
---
-
-GRANT ALL ON TABLE public.market_payments TO admin;
-GRANT ALL ON TABLE public.market_payments TO operator;
-
-
---
--- Name: TABLE market_products; Type: ACL; Schema: public; Owner: postgres
---
-
-GRANT ALL ON TABLE public.market_products TO admin;
-GRANT ALL ON TABLE public.market_products TO operator;
-
-
---
--- Name: TABLE market_schedules; Type: ACL; Schema: public; Owner: postgres
---
-
-GRANT ALL ON TABLE public.market_schedules TO admin;
-GRANT ALL ON TABLE public.market_schedules TO operator;
-
-
---
--- Name: SEQUENCE market_schedules_schedule_id_seq; Type: ACL; Schema: public; Owner: postgres
---
-
-GRANT ALL ON SEQUENCE public.market_schedules_schedule_id_seq TO admin;
-GRANT ALL ON SEQUENCE public.market_schedules_schedule_id_seq TO operator;
-
-
---
--- Name: TABLE markets; Type: ACL; Schema: public; Owner: postgres
---
-
-GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE public.markets TO admin;
-GRANT ALL ON TABLE public.markets TO operator;
-
-
---
--- Name: TABLE payment_methods; Type: ACL; Schema: public; Owner: postgres
---
-
-GRANT ALL ON TABLE public.payment_methods TO admin;
-GRANT ALL ON TABLE public.payment_methods TO operator;
-
-
---
--- Name: SEQUENCE payment_methods_payment_method_id_seq; Type: ACL; Schema: public; Owner: postgres
---
-
-GRANT ALL ON SEQUENCE public.payment_methods_payment_method_id_seq TO admin;
-GRANT ALL ON SEQUENCE public.payment_methods_payment_method_id_seq TO operator;
-
-
---
--- Name: TABLE products; Type: ACL; Schema: public; Owner: postgres
---
-
-GRANT ALL ON TABLE public.products TO admin;
-GRANT ALL ON TABLE public.products TO operator;
-
-
---
--- Name: SEQUENCE products_product_id_seq; Type: ACL; Schema: public; Owner: postgres
---
-
-GRANT ALL ON SEQUENCE public.products_product_id_seq TO admin;
-GRANT ALL ON SEQUENCE public.products_product_id_seq TO operator;
-
-
---
--- Name: TABLE reviews; Type: ACL; Schema: public; Owner: postgres
---
-
-GRANT ALL ON TABLE public.reviews TO admin;
-GRANT ALL ON TABLE public.reviews TO operator;
-
-
---
--- Name: SEQUENCE reviews_review_id_seq; Type: ACL; Schema: public; Owner: postgres
---
-
-GRANT ALL ON SEQUENCE public.reviews_review_id_seq TO admin;
-GRANT ALL ON SEQUENCE public.reviews_review_id_seq TO operator;
-
-
---
--- Name: TABLE users; Type: ACL; Schema: public; Owner: admin
---
-
-GRANT ALL ON TABLE public.users TO operator;
-
-
---
--- Name: SEQUENCE users_id_seq; Type: ACL; Schema: public; Owner: admin
---
-
-GRANT ALL ON SEQUENCE public.users_id_seq TO operator;
-
-
---
--- Name: DEFAULT PRIVILEGES FOR TABLES; Type: DEFAULT ACL; Schema: public; Owner: postgres
---
-
-ALTER DEFAULT PRIVILEGES FOR ROLE postgres IN SCHEMA public GRANT ALL ON TABLES  TO admin;
-
-
---
 -- PostgreSQL database dump complete
 --
 

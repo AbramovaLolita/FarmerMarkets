@@ -17,7 +17,7 @@ while command != 'exit':
     elif command == 'info':
         util.market_info()
     elif command == 'find':
-        util.market_find()
+        util.market_search()
     elif command == 'logout':
         user_id = None
     elif command == 'review':

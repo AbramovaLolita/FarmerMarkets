@@ -2,6 +2,7 @@ import bcrypt
 import psycopg2
 import os
 from dotenv import load_dotenv
+import math
 
 
 load_dotenv()
@@ -11,7 +12,7 @@ def get_connection():
     return psycopg2.connect(
         dbname=os.getenv("DB_NAME"),
         host=os.getenv("DB_HOST"),
-        user=db_user,
+        user=os.getenv("DB_USER"),
         password=os.getenv("DB_PASS"),
         port=os.getenv("DB_PORT")
     )
@@ -83,14 +84,14 @@ def markets_list_db(limit,offset,sort_by='name',order='None'):
     cur = conn.cursor()
     query = '''select m.name, 
     COALESCE(AVG(r.rating),0) as avg_rating, 
-    COUNT(r.review_id) as review_count  
+    COUNT(r.review_id) as review_count
     FROM markets m 
     LEFT JOIN reviews r on m.fmid=r.fmid 
     LEFT JOIN locations l ON m.zip=l.zip
-    GROUP BY m.name,  l.city, l.state
+    GROUP BY m.name, l.city, l.state
     '''
 
-    query += market_filter(sort_by, order)
+    query += market_filter(sort_by, order,user_lat=None,user_long=None)
     query += ' LIMIT %s OFFSET %s'
     cur.execute(query, (limit, offset))
     data = cur.fetchall()
@@ -125,14 +126,32 @@ def market_info_db(market_name):
     '''
     cur.execute(group_query, (fmid,))
     info_group = cur.fetchone()
+
+    product_query = '''SELECT p.product_name 
+                        FROM products p 
+                        WHERE product_id in (select product_id from market_products where fmid = %s )'''
+
+    cur.execute(product_query, (fmid,))
+    info_products = [row[0] for row in cur.fetchall()]
+
+    payment_query = '''SELECT pm.payment_method
+                        FROM payment_methods pm
+                        WHERE payment_method_id in (select payment_method_id from market_payments where fmid = %s )'''
+
+    cur.execute(payment_query, (fmid,))
+    info_payment = [row[0] for row in cur.fetchall()]
     cur.close()
     conn.close()
-    return info_data[1:] + info_group
+    return  {
+        "main_info": info_data[1:] + info_group,
+        "products": info_products,
+        "payments": info_payment
+    }
 
-def market_find_db(city=None,state=None,zip_code=None,sort_by='name',order='None'):
+def market_search_db(city=None,state=None,zip_code=None,sort_by='name',order='None', user_lat=None, user_long=None,max_dist=None):
     conn = get_connection()
     cur = conn.cursor()
-
+    dist = f"(6371 * acos(cos(radians({user_lat})) * cos(radians(m.lat)) * cos(radians(m.long) - radians({user_long})) + sin(radians({user_lat})) * sin(radians(m.lat))))"
     query = ('''SELECT  m.name, m.street, l.city, l.state, l.zip, COALESCE(AVG(r.rating),0) as avg_rating FROM markets m 
              JOIN locations l ON m.zip = l.zip 
              LEFT JOIN reviews r ON m.fmid = r.fmid
@@ -147,9 +166,11 @@ def market_find_db(city=None,state=None,zip_code=None,sort_by='name',order='None
     if zip_code:
         query += " AND l.zip = %s"
         geo_parts.append(zip_code)
+    if user_lat and user_long and max_dist:
+        query += f" AND {dist} <= %s"
+        geo_parts.append(max_dist)
     query += " GROUP BY m.name, m.street, l.city, l.state, l.zip"
-    query += market_filter(sort_by, order)
-
+    query += market_filter(sort_by, order,user_lat,user_long)
     cur.execute(query, tuple(geo_parts))
     data = cur.fetchall()
     cur.close()
@@ -166,13 +187,20 @@ def market_review_db(fmid, rating, comment,user_id):
     cur.close()
     conn.close()
 
-def market_filter(sort_by, order):
+def market_filter(sort_by, order,user_lat,user_long):
     sort_columns = {
         'name': 'm.name',
         'city': 'l.city',
         'state': 'l.state',
         'rating': 'avg_rating',
         }
+    if sort_by == 'distance' and user_lat and user_long:
+        # Формула Гаверсина на языке SQL (6371 - радиус Земли)
+        column = f'''(6371 * acos(cos(radians({user_lat})) * cos(radians(m.lat)) * 
+                  cos(radians(m.long) - radians({user_long})) + 
+                  sin(radians({user_lat})) * sin(radians(m.lat))))'''
+    else:
+        column = sort_columns.get(sort_by, 'm.name')
     column = sort_columns.get(sort_by, 'm.name')
     direction = 'DESC' if order.upper() == 'DESC' else 'ASC'
     return f' ORDER BY {column} {direction}'

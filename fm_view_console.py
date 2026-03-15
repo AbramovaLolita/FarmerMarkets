@@ -1,4 +1,5 @@
 '''Команды register,login'''
+
 def print_auth():
     print('Sign up or sign in to write a review')
 
@@ -18,34 +19,44 @@ def print_request_email():
     print('Enter your email (optional) => ', end='')
 
 def print_empty():
-    print("Username and password can't be empty")
+    print('Username and password can not be empty')
 
 '''Команда list'''
 def print_page():
-    print("Command ('prev', 'next', 'exit') => ", end='')
+    print("Command ('prev','next','exit') => ", end='')
 
 def print_cur_page(cur_page,total_pages):
-    print(f"Page {cur_page} of {total_pages} ")
+    print(f"Page {cur_page} of {total_pages}")
 
 def print_market_list(market_row):
     print(f'{market_row[0]}. Rating: {market_row[1]:.2f}, Reviews: {market_row[2]}.')
 
+def print_ask_location():
+    print("Enter your latitude and longitude (format: 44.411036 -72.140337)  => ", end='')
+
+def print_ask_distance():
+    print("Enter radius (km) => ", end='')
+
+
+
 '''Команда info'''
 def print_market_name():
-    print("Command (market name, 'exit') => ", end='')
+    print("Enter market name => ", end='')
 
 def print_market_info(info):
     # кортеж с атрибутами из БД
     (name, street, lat, long, city, county, state,
-    web, fb, tw, other_med, num, date, time,
-    rating, review_count) = info
-
+    web, fb, tw, other_med, num, date, time, rating, review_count) = info["main_info"]
+    products = ', '.join(info['products'])
+    payment = ', '.join(info['payments'])
     print(f"      {name}     ")
     # сборка адреса
     loc_parts = [street, city, state]
     address = ", ".join([p for p in loc_parts if p])
     print(f'Address: {address or "N/A"}')
-    print(f'Coordinates {lat or "—"}, {long or "—"}')
+    print(f'Coordinates: {lat or "—"}, {long or "—"}')
+    print(f'Payment methods: {payment or "—"}')
+    print(f'Products: {products}')
 
     # сборка веб-ресурсов
     media_parts = [web, fb, tw, other_med]
@@ -104,13 +115,13 @@ def print_failed():
     print('Failed!')
 
 def print_prompt():
-    print("Command ('register', 'login, 'list','info', 'find', 'review','delete','logout','exit') => ", end='')
+    print("Command ('register','login,'list','info','find','review','delete','logout','exit') => ", end='')
 
 def print_command(command):
     print(command)
 
 def print_invalid_command():
-    print("Invalid command, ignoring")
+    print('Invalid command, ignoring')
 
 def print_newline():
     print()
@@ -119,10 +130,10 @@ def print_exit():
     print("Done")
 
 def print_continue():
-    print("Command ('exit', 'continue') => ", end='')
+    print("Command ('exit','continue') => ", end='')
 
 def print_order_by():
-    print('Sort by: 1 - Market, 2 - city, 3 - state, 4 - rating => ', end='')
+    print('Sort by: 1 - market, 2 - city, 3 - state, 4 - rating, 5 - dist => ', end='')
 
 def print_asc_desc():
     print('Sort by: 1 - Ascending, 2 - Descending => ', end='')
