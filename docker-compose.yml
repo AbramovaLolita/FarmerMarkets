@@ -1,0 +1,30 @@
+services:
+  db:
+    image: postgres:15
+    restart: always
+    environment:
+      POSTGRES_DB: ${DB_NAME}    
+      POSTGRES_USER: ${DB_USER}         
+      POSTGRES_PASSWORD: ${DB_PASS}  
+    volumes:
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    ports:
+      - "5432:5432"
+
+  app:
+    build: .
+    volumes:
+      - ./src:/app/src
+    depends_on:
+      - db
+    env_file:
+      - .env 
+    environment:
+      - PYTHONPATH=/app/src 
+      - PYTHONUNBUFFERED=1
+      - NO_AT_BRIDGE=1
+      - VNC_PW=${VNC_PW} 
+      - DB_HOST=db         
+      - DB_PORT=5432
+    ports:
+      - "6901:6901"
