@@ -26,8 +26,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 WORKDIR /app
 
-COPY requirements.txt .
-RUN pip3 install --upgrade pip  # <-- ДОБАВЬ ЭТО
+COPY . .
 RUN pip3 install --no-cache-dir -r requirements.txt
 
 #  проект
@@ -38,7 +37,6 @@ RUN chown -R 1000:1000 /app
 ENV DISPLAY=:1
 ENV QT_QPA_PLATFORM=xcb
 ENV PYTHONPATH="${PYTHONPATH}:/app/src"
-CMD ["python", "src/main.py"]
 
 # запуск
 RUN echo "cd /app && python3 src/main.py &" >> /dockerstartup/vnc_startup.sh

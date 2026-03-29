@@ -1,4 +1,5 @@
 @echo off
+chcp 65001 >nul
 echo 1. Собираем и запускаем контейнеры...
 docker-compose up -d --build
 

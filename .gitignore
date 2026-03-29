@@ -1,6 +1,6 @@
-data_csv/
-**/__pycache__/
-repl-version/
 venv/
 .idea/
 .env
+data_csv/
+**/__pycache__/
+repl-version/

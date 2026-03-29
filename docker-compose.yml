@@ -13,8 +13,6 @@ services:
 
   app:
     build: .
-    volumes:
-      - ./src:/app/src
     depends_on:
       - db
     env_file:
